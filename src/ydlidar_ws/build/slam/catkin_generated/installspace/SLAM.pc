@@ -1,0 +1,8 @@
+prefix=/home/tiendat2004/ydlidar_ws/install
+
+Name: SLAM
+Description: Description of SLAM
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
