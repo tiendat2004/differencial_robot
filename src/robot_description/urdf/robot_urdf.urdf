@@ -2,8 +2,29 @@
 <!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
-<robot
-  name="robot_car">
+<robot name="robot_car">
+   <gazebo>
+    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+      <!-- Plugin update rate in Hz -->
+      <updateRate>10</updateRate>
+      
+      <!-- Thông tin bánh xe -->
+      <leftJoint>left_wheel_joint</leftJoint>
+      <rightJoint>right_wheel_joint</rightJoint>
+      <wheelSeparation>0.35</wheelSeparation>
+      <wheelDiameter>0.1</wheelDiameter>
+
+      <!-- Giới hạn -->
+      <wheelTorque>200</wheelTorque>
+      <wheelAcceleration>10.0</wheelAcceleration>
+
+      <!-- Output -->
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
+      <publishOdomTF>true</publishOdomTF>
+      <publishWheelTF>true</publishWheelTF>
+    </plugin>
+  </gazebo>
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
       <robotNamespace>/robot_car</robotNamespace>
@@ -59,6 +80,7 @@
     <minDepth>0.001</minDepth>
     <material>Gazebo/Gray</material>
   </gazebo>
+    
   <link
     name="base_link">
     <inertial>
