@@ -1,0 +1,47 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="model" default="robot_car" doc="Model type [robot_car, remo]"/>
+  <arg name="map_file" default="$(find robot_navigation)/maps/map.yaml"/>
+  <arg name="open_rviz" default="true"/>
+  <arg name="move_forward_only" default="false"/>
+  <arg name="local_planner" default="dwa" doc="Local planner can be either dwa, base, teb, or pose"/>
+
+  <!-- Map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" output="screen"/>
+
+    <include file="$(find robot_navigation)/launch/amcl.launch" />
+    <rosparam file="$(find robot_navigation)/config/controller.yaml" command="load"/>
+
+  <!-- Move base cho điều hướng robot -->
+  <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
+    <!-- Load configuration files -->
+    <rosparam file="$(find robot_navigation)/config/costmap_common_params.yaml" command="load"/>
+    <rosparam file="$(find robot_navigation)/config/costmap_global_params.yaml" command="load" ns="global_costmap"/>
+    <rosparam file="$(find robot_navigation)/config/costmap_local_params.yaml" command="load" ns="local_costmap"/>
+    <rosparam file="$(find robot_navigation)/config/move_base_params.yaml" command="load"/>
+    <rosparam file="$(find robot_navigation)/config/dwa_local_planner_params.yaml" command="load"/>
+
+
+    <!-- Planner configuration -->
+    <param name="base_global_planner" value="navfn/NavfnROS"/>
+    <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+    <!-- Frame parameters -->
+    <param name="global_frame" value="map"/>
+    <param name="robot_base_frame" value="base_link"/>
+    <param name="odom_frame" value="odom"/>
+    <!-- Topic remapping -->
+    <param name="map_topic" value="/map"/>
+    <param name="scan_topic" value="/scan"/>
+  </node>
+
+  <!-- Controller spawner -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+        args="/robot_car/joints_update /robot_car/mobile_base_controller"/>
+
+  <!-- RViz -->
+  <group if="$(arg open_rviz)">
+    <node pkg="rviz" type="rviz" name="rviz" required="true"
+          args="-d $(find robot_navigation)/rviz/$(arg model)_navigation.rviz"/>
+  </group>
+</launch>
+

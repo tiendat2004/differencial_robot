@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="robot_car">
+
+  <!-- Các tham số chung -->
+  <xacro:property name="base_color" value="0.25 0.25 0.25 1" />
+  <xacro:property name="wheel_color" value="0.79 0.82 0.93 1" />
+  <xacro:property name="ydlidar_color" value="1 1 1 1" />
+  <xacro:property name="mesh_path" value="package://robot_description/meshes/" />
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0.00678154130032599 1.02572811355728E-11 0.049058783144438" rpy="0 0 0" />
+      <mass value="0.73044118152173" />
+      <inertia ixx="0.00392745212406862" ixy="-3.37182307490775E-11" ixz="0.000128556224286988" 
+              iyy="0.00654116388166114" iyz="-2.67918025679153E-17" izz="0.00775398575956591" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${mesh_path}base_link.STL" />
+      </geometry>
+      <material name="base_material">
+        <color rgba="${base_color}" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${mesh_path}base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- Right Wheel -->
+  <xacro:macro name="wheel" params="wheel_name joint_name origin_xyz origin_rpy">
+    <link name="${wheel_name}">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <mass value="0.02973385270431" />
+        <inertia ixx="1.22905526652631E-05" ixy="0" ixz="0"
+                iyy="1.22912184621518E-05" iyz="0" izz="2.03782430173705E-05" />
+      </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="${mesh_path}${wheel_name}.STL" />
+        </geometry>
+        <material name="${wheel_name}_material">
+          <color rgba="${wheel_color}" />
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <mesh filename="${mesh_path}${wheel_name}.STL" />
+        </geometry>
+      </collision>
+    </link>
+    <joint name="${joint_name}" type="continuous">
+      <origin xyz="${origin_xyz}" rpy="${origin_rpy}" />
+      <parent link="base_link" />
+      <child link="${wheel_name}" />
+      <axis xyz="0 0 1" />
+      <dynamics damping="0.1" friction="0.1" />
+    </joint>
+  </xacro:macro>
+
+  <!-- Left Wheel -->
+  <xacro:wheel wheel_name="right_wheel" joint_name="right_wheel_joint"
+                origin_xyz="0.043261 -0.1225 0.02" origin_rpy="-1.5708 0 0" />
+  <xacro:wheel wheel_name="left_wheel" joint_name="left_wheel_joint"
+                origin_xyz="0.043282 0.1225 0.02" origin_rpy="-1.5708 0 0" />
+
+  <!-- Caster Wheel -->
+  <link name="caster_wheel">
+    <inertial>
+      <origin xyz="-0.16814 0.0040136 -0.0726" rpy="0 0 0" />
+      <mass value="0.014137" />
+      <inertia ixx="1.2723E-06" ixy="0" ixz="0" iyy="1.2723E-06" iyz="0" izz="1.2723E-06" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${mesh_path}caster_wheel.STL" />
+      </geometry>
+      <material name="caster_wheel_material">
+        <color rgba="${wheel_color}" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${mesh_path}caster_wheel.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="caster_wheel_joint" type="fixed">
+    <origin xyz="0.071461 -0.00080282 0.0776" rpy="0 0 0.019092" />
+    <parent link="base_link" />
+    <child link="caster_wheel" />
+    <axis xyz="0 0 1" />
+    <dynamics damping="0.1" friction="0.1" />
+  </joint>
+
+  <!-- LIDAR -->
+  <link name="link_ydlidar">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0" />
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${mesh_path}link_ydlidar.STL" />
+      </geometry>
+      <material name="ydlidar_material">
+        <color rgba="${ydlidar_color}" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="${mesh_path}link_ydlidar.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="joint_ydlidar" type="fixed">
+    <origin xyz="0.071461 -0.00080282 0.0776" rpy="0 0 0.019092" />
+    <parent link="base_link" />
+    <child link="link_ydlidar" />
+  </joint>
+  
+
+</robot>
+

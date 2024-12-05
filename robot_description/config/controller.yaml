@@ -1,0 +1,16 @@
+diff_drive_controller:
+  type: "diff_drive_controller/DiffDriveController"
+  left_wheel: "left_wheel_joint"
+  right_wheel: "right_wheel_joint"
+  publish_rate: 50
+  pose_covariance_diagonal: [0.001, 0.001, 0.01, 0.01, 0.01, 0.1]
+  twist_covariance_diagonal: [0.001, 0.001, 0.01, 0.01, 0.01, 0.1]
+
+  wheel_separation: 0.19  # Khoảng cách giữa hai bánh xe
+  wheel_radius: 0.05      # Bán kính bánh xe
+  velocity_rolling_window_size: 2
+
+  enable_odom_tf: true
+  publish_cmd: true
+  cmd_vel_timeout: 0.5
+
