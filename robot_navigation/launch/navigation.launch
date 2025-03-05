@@ -9,8 +9,7 @@
   <!-- Map server -->
   <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" output="screen"/>
 
-    <include file="$(find robot_navigation)/launch/amcl.launch" />
-    <rosparam file="$(find robot_navigation)/config/controller.yaml" command="load"/>
+  <include file="$(find robot_navigation)/launch/amcl.launch" />
 
   <!-- Move base cho điều hướng robot -->
   <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
